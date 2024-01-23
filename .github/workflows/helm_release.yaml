@@ -1,29 +1,30 @@
 ---
-name: Release helm chart
-on:
+name: Release Charts
+'on':
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - release
 jobs:
-  release-helm:
-    name: Release helm chart
-    env:
-      HELM_EXPERIMENTAL_OCI: 1
-    runs-on: ubuntu-22.04
-    if: github.repository_owner == 'metacontroller'
+  release:
+    permissions:
+      contents: write
+      packages: write
+      pages: write
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        name: Checkout
-      - name: install helm
-        uses: Azure/setup-helm@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          version: 3.8.0
-      - name: login to ghcr.io using helm
+          fetch-depth: 0
+      - name: Configure Git
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io/metacontroller/metacontroller-helm --username ${{ github.repository_owner }} --password-stdin
-      - name: save helm chart to local registry
-        run: |
-          helm package ${{ github.workspace }}/deploy/helm/metacontroller/
-      - name: publish chart to ghcr.io
-        run: |
-          helm push metacontroller-helm-${{ github.ref_name }}.tgz oci://ghcr.io/metacontroller
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.5.0
+        env:
+          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          charts_dir: "helm"
