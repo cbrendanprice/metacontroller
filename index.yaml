@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  metacontroller-helm:
+  - apiVersion: v2
+    appVersion: v4.11.7
+    created: "2024-01-23T19:12:05.366207426Z"
+    description: Writing kubernetes controllers can be simple
+    digest: 416d127411ed84af698b8dd82d3b6b931cfca7f1c867c929307c43a26244a521
+    home: https://metacontroller.github.io/metacontroller/
+    kubeVersion: ^1.14.0-0
+    name: metacontroller-helm
+    sources:
+    - https://github.com/metacontroller/metacontroller
+    type: application
+    urls:
+    - https://github.com/cbrendanprice/metacontroller/releases/download/metacontroller-helm-v4.11.7/metacontroller-helm-v4.11.7.tgz
+    version: v4.11.7
+generated: "2024-01-23T19:12:05.366218477Z"
